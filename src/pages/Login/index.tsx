@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Tabs } from 'antd';
+import { Button, Form, Input, Tabs, message } from 'antd';
 import React from 'react';
 import styles from "./index.less";
 import { history } from '@umijs/max';
@@ -8,14 +8,19 @@ import type { UserLoginParams } from '@/api/User';
 import UserLogin from '@/api/User';
 
 const Login: React.FC = () => {
-
+	const [messageApi, contextHolder] = message.useMessage();
 	const onFinish = async (data: UserLoginParams) => {
 		const response = await UserLogin(data);
-		history.push('/');
+		if (response.code === 200) {
+			history.push('/');
+		} else {
+			messageApi.error(response.message || '登录失败');
+		}
 	}
 
 	return (
 		<div className={styles.container_class_name}>
+			{contextHolder}
 			<div className={styles.login_form}>
 				<div className={styles.login_form_head}>
 					<div className={styles.login_form_title}>
