@@ -4,8 +4,8 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import React from 'react';
-import { Dropdown } from 'antd';
+import React from 'react'; 
+import { Dropdown } from 'antd'; 
 import { LogoutOutlined } from '@ant-design/icons';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
@@ -24,11 +24,11 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 	return {
-		avatarProps: {
+		avatarProps: { 
 			src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
 			size: 'small',
 			title: '超级管理员',
-			render: (props, dom) => {
+			render: (props, dom) => { 
 				return (
 					<Dropdown
 						menu={{
