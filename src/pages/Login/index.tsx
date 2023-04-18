@@ -4,10 +4,13 @@ import { Button, Form, Input, Tabs } from 'antd';
 import React from 'react';
 import styles from "./index.less";
 import { history } from '@umijs/max';
+import type { UserLoginParams } from '@/api/User';
+import UserLogin from '@/api/User';
 
 const Login: React.FC = () => {
 
-	const onFinish = () => {
+	const onFinish = async (data: UserLoginParams) => {
+		const response = await UserLogin(data);
 		history.push('/');
 	}
 
