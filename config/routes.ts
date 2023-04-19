@@ -15,13 +15,13 @@ export default [
 		path: '/login',
 		name: 'login',
 		layout: false,
-		component: './Login',
+		component: './login',
 	},
 	{
 		path: '/welcome',
 		name: '欢迎页',
 		icon: 'smile',
-		component: './Welcome',
+		component: './welcome',
 	},
 	{
 		name: '博客管理',
@@ -31,12 +31,12 @@ export default [
 			{
 				name: '博客列表',
 				path: 'list',
-				component: './Blog/BlogList'
+				component: './blog/list'
 			},
 			{
 				name: '标签管理',
 				path: 'label',
-				component: './Blog/LabelList'
+				component: './blog/label'
 			}
 		]
 	},
