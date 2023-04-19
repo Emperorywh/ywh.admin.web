@@ -34,6 +34,11 @@ export default [
 				component: './blog/list'
 			},
 			{
+				name: '分类管理',
+				path: 'classify',
+				component: './blog/classify'
+			},
+			{
 				name: '标签管理',
 				path: 'label',
 				component: './blog/label'

@@ -11,7 +11,10 @@ export const errorConfig: RequestConfig = {
 	// 请求拦截器
 	requestInterceptors: [
 		(config: RequestOptions) => {
-
+			const token = localStorage.getItem('USER_TOKEN');
+			if (token && config.headers) {
+				config.headers['Authorization'] = token;
+			}
 			return config;
 		},
 	],

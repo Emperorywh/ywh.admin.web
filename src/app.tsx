@@ -38,7 +38,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 									icon: <LogoutOutlined />,
 									label: '退出登录',
 									danger: true,
-									onClick: () => { history.push('/login') }
+									onClick: () => {
+										history.push('/login');
+										localStorage.clear();
+									}
 								},
 							],
 						}}

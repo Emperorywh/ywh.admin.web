@@ -5,13 +5,14 @@ import React from 'react';
 import styles from "./index.less";
 import { history } from '@umijs/max';
 import type { UserLoginParams } from '@/api/User';
-import UserLogin from '@/api/User';
+import { UserLogin } from '@/api/User';
 
 const Login: React.FC = () => {
 	const [messageApi, contextHolder] = message.useMessage();
 	const onFinish = async (data: UserLoginParams) => {
 		const response = await UserLogin(data);
 		if (response.code === 200) {
+			localStorage.setItem('USER_TOKEN', response.data.token);
 			history.push('/');
 		} else {
 			messageApi.error(response.message || '登录失败');
