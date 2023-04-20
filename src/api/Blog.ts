@@ -68,7 +68,8 @@ export interface IBlog {
     status: number,
     likeNumber: number,
     commentNumber: number,
-    readNumber: number
+    readNumber: number,
+    cover: string
 }
 
 

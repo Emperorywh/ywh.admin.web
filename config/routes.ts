@@ -46,6 +46,12 @@ export default [
 		]
 	},
 	{
+		name: '创作者中心',
+		path: '/blog/editor',
+		layout: false,
+		component: './blog/editor'
+	},
+	{
 		path: '/',
 		redirect: '/welcome',
 	},

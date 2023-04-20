@@ -1,11 +1,12 @@
-import { PageContainer } from "@ant-design/pro-components";
-import { Avatar, Button, Card, Checkbox, Col, Divider, Empty, Input, Pagination, Popconfirm, Radio, Row, Space, Tag, message } from "antd";
+import { PageContainer, nanoid } from "@ant-design/pro-components";
+import { Avatar, Button, Card, Checkbox, Col, Divider, Empty, Input, Pagination, Popconfirm, Radio, Row, Space, Spin, Tag, message } from "antd";
 import styles from "./index.less";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BlogClassifyPageQuery, IBlogClassify } from "@/api/BlogClassify";
 import { BlogLabelPageQuery, IBlogLabel } from "@/api/BlogLabel";
 import { BlogDelete, BlogPageQuery, IBlog } from "@/api/Blog";
-import { DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { history } from '@umijs/max';
 
 /**
  * 博客分类 多选框数据类型
@@ -16,6 +17,8 @@ interface IBlogLabelCheckBox extends IBlogLabel {
 }
 
 const PageComponent: React.FC = () => {
+    //是否加载中
+    const [isLoading, setIsLoading] = useState(false);
     //搜索栏绑定的输入框
     const [blogTitle, setblogTitle] = useState('');
     //博客列表
@@ -28,6 +31,10 @@ const PageComponent: React.FC = () => {
     const [labelList, setLabelList] = useState<IBlogLabelCheckBox[]>([]);
     //当前选中的标签
     const [selectedLabel, setSelectedLabel] = useState<string[]>([]);
+    //是否全选标签样式
+    const [indeterminate, setIndeterminate] = useState(false);
+    //是否全选
+    const [checkAll, setCheckAll] = useState(false);
     //消息实例
     const [messageApi, contextHolder] = message.useMessage();
     //当前页面
@@ -75,6 +82,7 @@ const PageComponent: React.FC = () => {
      * 查询博客列表
      */
     const onFetchBlogList = async () => {
+        setIsLoading(true);
         const response = await BlogPageQuery({
             pageIndex,
             pageSize,
@@ -82,6 +90,7 @@ const PageComponent: React.FC = () => {
             classification: selectedClassify,
             label: selectedLabel
         });
+        setIsLoading(false);
         if (response.code === 200) {
             setTotal(response.data.total);
             setBlogList(response.data.items);
@@ -103,16 +112,23 @@ const PageComponent: React.FC = () => {
         }
     }
 
+    /**
+     * 创建博客
+     */
+    const handleCreateBlog = () => {
+        history.push('/blog/editor');
+    }
+
     useEffect(() => {
         onFetchBlogList();
-    }, [pageIndex, pageSize]);
+    }, [pageIndex, pageSize, selectedClassify, selectedLabel]);
 
     useEffect(() => {
         onFetchBlogClassify();
         onFetchBlogLabel();
     }, []);
 
-    return <>
+    return <Spin size="large" spinning={isLoading} >
         {contextHolder}
         {/* 头部 */}
         <PageContainer className={styles.blog_container}>
@@ -129,6 +145,7 @@ const PageComponent: React.FC = () => {
                 <Space>
                     <div>分类：</div>
                     <Radio.Group buttonStyle="solid" value={selectedClassify} onChange={value => setSelectedClassify(value.target.value)}>
+                        <Radio.Button key={nanoid()} value={""}>全部</Radio.Button>
                         {
                             classifyList.map(item => {
                                 return <Radio.Button key={item._id} value={item._id} disabled={item.status === 0}>{item.name}</Radio.Button>
@@ -141,9 +158,31 @@ const PageComponent: React.FC = () => {
             <div className={styles.blog_classify_item}>
                 <Space>
                     <div>标签：</div>
-                    <Checkbox.Group value={selectedLabel} onChange={value => setSelectedLabel(value as unknown as string[])} options={labelList} />
+                    <Checkbox indeterminate={indeterminate} onChange={(value) => {
+                        if (value.target.checked) {
+                            const temp: string[] = [];
+                            labelList.forEach(item => {
+                                temp.push(item._id as string);
+                            });
+                            setSelectedLabel(temp);
+                        } else {
+                            setSelectedLabel([]);
+                        }
+                        setCheckAll(value.target.checked);
+                        setIndeterminate(false);
+                    }} checked={checkAll}>
+                        全选
+                    </Checkbox>
+                    <Checkbox.Group value={selectedLabel} onChange={value => {
+                        setSelectedLabel(value as unknown as string[]);
+                        setCheckAll(value.length === labelList.length);
+                        setIndeterminate(value.length > 0 && value.length !== labelList.length);
+                    }} options={labelList} />
                 </Space>
             </div>
+            <Button className={styles.blog_classify_add} type="primary" icon={<PlusOutlined />} size="large" onClick={handleCreateBlog}>
+                发布博客
+            </Button>
         </Card>
         {/* 博客列表 */}
         {
@@ -156,7 +195,11 @@ const PageComponent: React.FC = () => {
                                     hoverable
                                     style={{ width: '100%' }}
                                     cover={<div className={styles.blog_cover_box}>
-                                        <img style={{ width: '100%', height: '200px' }} alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/iZBVOIhGJiAnhplqjvZW.png" />
+                                        {
+                                            item.cover ? <img style={{ width: '100%', height: '200px' }} alt="example" src={item.cover} /> :
+                                                <img style={{ width: '100%', height: '200px' }} alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/iZBVOIhGJiAnhplqjvZW.png" />
+                                        }
+
                                         <Tag className={styles.blog_cover_classify} color="cyan">{(typeof item.classification !== 'string') && item.classification.name}</Tag>
                                     </div>}
                                     actions={[
@@ -184,7 +227,7 @@ const PageComponent: React.FC = () => {
                         })
                     }
                 </Row>
-            </div> : <Empty style={{backgroundColor: '#FFF', margin: '20px', height: '400px'}} />
+            </div> : <Empty style={{ backgroundColor: '#FFF', margin: '20px', height: '400px' }} />
         }
         {/* 分页组件 */}
         <div className={styles.blog_pagenation}>
@@ -193,8 +236,7 @@ const PageComponent: React.FC = () => {
                 setPageSize(pageSize);
             }} />
         </div>
-
-    </>
+    </Spin>
 }
 
 export default PageComponent;
