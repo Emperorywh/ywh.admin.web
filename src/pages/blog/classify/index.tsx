@@ -186,10 +186,12 @@ const PageComponent: React.FC = () => {
                 onChange: setSelectedRowKeys
             }}
         />
-        <CreateUpdateForm classify={currClassify} open={showModal} onOk={() => {
-            setShowModal(false);
-            actionRef.current?.reload();
-        }} onCancel={() => setShowModal(false)}></CreateUpdateForm>
+        {
+            showModal && <CreateUpdateForm classify={currClassify} open={showModal} onOk={() => {
+                setShowModal(false);
+                actionRef.current?.reload();
+            }} onCancel={() => setShowModal(false)}></CreateUpdateForm>
+        }
     </PageContainer>
 }
 

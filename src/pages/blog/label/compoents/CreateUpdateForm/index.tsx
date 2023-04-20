@@ -1,4 +1,4 @@
-import { BlogClassifyCreate, BlogClassifyUpdate, IBlogClassify } from "@/api/BlogClassify";
+import { BlogLabelCreate, BlogLabelUpdate, IBlogLabel } from "@/api/BlogLabel";
 import { Form, Input, message, Modal, Select } from "antd";
 import { useEffect } from "react";
 
@@ -6,7 +6,7 @@ interface IProps {
     open: boolean;
     onOk: () => void;
     onCancel: () => void;
-    classify?: IBlogClassify
+    label?: IBlogLabel
 }
 
 const CreateUpdateForm: React.FC<IProps> = (props) => {
@@ -15,9 +15,9 @@ const CreateUpdateForm: React.FC<IProps> = (props) => {
     const [messageApi, contextHolder] = message.useMessage();
 
     const handleOk = async () => {
-        const formData: IBlogClassify = await form.validateFields();
+        const formData: IBlogLabel = await form.validateFields();
         if (formData._id) {
-            const response = await BlogClassifyUpdate(formData);
+            const response = await BlogLabelUpdate(formData);
             if (response.code === 200) {
                 messageApi.success('更新成功');
                 props.onOk();
@@ -25,7 +25,7 @@ const CreateUpdateForm: React.FC<IProps> = (props) => {
                 messageApi.success(response.message || '更新失败');
             }
         } else {
-            const response = await BlogClassifyCreate(formData);
+            const response = await BlogLabelCreate(formData);
             if (response.code === 200) {
                 messageApi.success('创建成功');
                 props.onOk();
@@ -35,14 +35,14 @@ const CreateUpdateForm: React.FC<IProps> = (props) => {
         }
     }
 
-    return <Modal title="博客分类" open={props.open} onOk={handleOk} onCancel={props.onCancel}>
+    return <Modal title="博客标签" open={props.open} onOk={handleOk} onCancel={props.onCancel}>
         {contextHolder}
         <Form
             name="basic"
             labelCol={{ span: 4 }}
             autoComplete="off"
             form={form}
-            initialValues={props.classify}
+            initialValues={props.label}
         >
             <Form.Item
                 label="id"
