@@ -1,15 +1,21 @@
 import { BlogClassifyDelete, BlogClassifyPageQuery, IBlogClassify } from "@/api/BlogClassify";
 import { CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { ActionType, PageContainer, ProColumns, ProTable, TableDropdown } from "@ant-design/pro-components";
+import { ActionType, PageContainer, ProColumns, ProTable } from "@ant-design/pro-components";
 import { Button, message, Popconfirm, Space, Tag } from "antd";
 import React, { useRef, useState } from "react";
+import CreateUpdateForm from "./compoents/CreateUpdateForm";
 
 const PageComponent: React.FC = () => {
     //表格实例对象
     const actionRef = useRef<ActionType>();
     //当前选中的ID
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    //消息实例
     const [messageApi, contextHolder] = message.useMessage();
+    //是否展示 创建/更新 弹窗
+    const [showModal, setShowModal] = useState(false);
+    //当前操作的分类
+    const [currClassify, setCurrClassify] = useState<IBlogClassify>();
     /**
      * 删除
      */
@@ -21,6 +27,7 @@ const PageComponent: React.FC = () => {
         const response = await BlogClassifyDelete(selectedRowKeys);
         if (response.code === 200) {
             message.success('删除成功！');
+            setSelectedRowKeys([]);
             actionRef.current?.reload();
         } else {
             message.error(response.message || '删除失败');
@@ -98,7 +105,8 @@ const PageComponent: React.FC = () => {
                 <a
                     key="editable"
                     onClick={() => {
-
+                        setCurrClassify(record);
+                        setShowModal(true);
                     }}
                 >
                     编辑
@@ -144,7 +152,8 @@ const PageComponent: React.FC = () => {
                     key="button"
                     icon={<PlusOutlined />}
                     onClick={() => {
-
+                        setCurrClassify(undefined);
+                        setShowModal(true);
                     }}
                     type="primary"
                 >
@@ -177,6 +186,10 @@ const PageComponent: React.FC = () => {
                 onChange: setSelectedRowKeys
             }}
         />
+        <CreateUpdateForm classify={currClassify} open={showModal} onOk={() => {
+            setShowModal(false);
+            actionRef.current?.reload();
+        }} onCancel={() => setShowModal(false)}></CreateUpdateForm>
     </PageContainer>
 }
 
