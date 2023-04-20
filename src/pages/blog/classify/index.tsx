@@ -188,6 +188,7 @@ const PageComponent: React.FC = () => {
         />
         {
             showModal && <CreateUpdateForm classify={currClassify} open={showModal} onOk={() => {
+                messageApi.success("操作成功");
                 setShowModal(false);
                 actionRef.current?.reload();
             }} onCancel={() => setShowModal(false)}></CreateUpdateForm>
