@@ -10,20 +10,11 @@
             align-items: center;
             height: 100px;
             width: 1200px;
-            position: sticky;
-            top: 0;
-            z-index: 999;
             background-color: #FFF;
 
-            .editor_logo {
-                width: 40px;
-                height: 40px;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
+            .editor_top_back {
+                cursor: pointer;
+                font-size: 18px;
             }
         }
     }
@@ -33,9 +24,22 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
         .editor_content {
             width: 1200px;
 
         }
     }
+}
+
+.upload_btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 160px;
+    height: 86px;
+    background-color: #fafafa;
+    border: 1px dashed #e5e6eb;
+    cursor: pointer;
 }

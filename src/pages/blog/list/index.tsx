@@ -103,13 +103,21 @@ const PageComponent: React.FC = () => {
      * 删除博客
      */
     const onDeleteBlog = async (blog: IBlog) => {
-        const response = await BlogDelete([blog._id]);
+        const response = await BlogDelete([blog._id as string]);
         if (response.code === 200) {
             messageApi.success("删除成功");
             onFetchBlogList();
         } else {
             messageApi.error(response.message || '删除失败');
         }
+    }
+
+    /**
+     * 编辑博客
+     * @param blog 
+     */
+    const onEditBlog = async (blog: IBlog) => {
+        history.push("/blog/editor?blogId=" + blog._id)
     }
 
     /**
@@ -203,7 +211,7 @@ const PageComponent: React.FC = () => {
                                         <Tag className={styles.blog_cover_classify} color="cyan">{(typeof item.classification !== 'string') && item.classification.name}</Tag>
                                     </div>}
                                     actions={[
-                                        <EditOutlined key="edit" />,
+                                        <EditOutlined key="edit" onClick={() => onEditBlog(item)} />,
                                         <Popconfirm
                                             title="确定要删除这篇博客吗？"
                                             description={item.title}
@@ -218,9 +226,9 @@ const PageComponent: React.FC = () => {
                                     <Card.Meta title={item.title} description={item.abstract} style={{ height: '150px' }} />
                                     <div className={styles.blog_auther_info}>
                                         <div>
-                                            {new Date(item.updateAt).toLocaleString()}
+                                            {new Date(item.updateAt || 0).toLocaleString()}
                                         </div>
-                                        <Avatar size={36} icon={<UserOutlined />} src={(typeof item.author !== 'string') && item.author.avatarUrl} />
+                                        <Avatar size={36} icon={<UserOutlined />} src={(typeof item.author !== 'string') && item.author?.avatarUrl} />
                                     </div>
                                 </Card>
                             </Col>

@@ -53,22 +53,33 @@ export function BlogPageQuery(data: IBlogPage) {
 }
 
 /**
+ * 根据博客ID查询博客内容
+ * @param blogId 
+ * @returns 
+ */
+export function BlogFindById(blogId: string) {
+    return request(`/apis/blog/${blogId}`, {
+        method: 'GET',
+    });
+}
+
+/**
  * 博客 数据类型
  */
 export interface IBlog {
-    _id: string,
-    author: string | IUser,
+    _id?: string,
+    author?: string | IUser,
     title: string,
     abstract: string,
     content: string,
     classification: string | IBlogClassify,
     label: string[] | IBlogLabel[],
-    createAt: number,
-    updateAt: number,
-    status: number,
-    likeNumber: number,
-    commentNumber: number,
-    readNumber: number,
+    createAt?: number,
+    updateAt?: number,
+    status?: number,
+    likeNumber?: number,
+    commentNumber?: number,
+    readNumber?: number,
     cover: string
 }
 
