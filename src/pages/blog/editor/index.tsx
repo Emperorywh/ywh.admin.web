@@ -40,6 +40,18 @@ const EditorComp: React.FC = () => {
     // 编辑器配置
     const editorConfig: Partial<IEditorConfig> = {
         placeholder: '请输入正文...',
+        MENU_CONF: {
+            uploadImage: {
+                fieldName: "file",
+                server: '/apis/user/uploadBlogImage',
+                headers: {
+                    Authorization: token
+                },
+                onSuccess:(file: File, res: any) => {
+
+                }
+            }
+        }
     }
     //消息实例
     const [messageApi, contextHolder] = message.useMessage();
@@ -288,6 +300,7 @@ const EditorComp: React.FC = () => {
                     <Form.Item
                         label="标签"
                         name="label"
+                        rules={[{ required: true, message: '请选择标签！' }]}
                     >
                         <Select
                             mode="multiple"

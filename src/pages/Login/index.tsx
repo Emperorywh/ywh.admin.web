@@ -10,11 +10,11 @@ import { UserLogin } from '@/api/User';
 const Login: React.FC = () => {
 	const [messageApi, contextHolder] = message.useMessage();
 	const onFinish = async (data: UserLoginParams) => {
-		const response = await UserLogin(data);
+		const response = await UserLogin(data); 
 		if (response.code === 200) {
 			localStorage.setItem('USER_TOKEN', response.data.token);
 			localStorage.setItem('USER_INFO', JSON.stringify(response.data.userInfo));
-			history.push('/');
+			history.push('/welcome');
 		} else {
 			messageApi.error(response.message || '登录失败');
 		}

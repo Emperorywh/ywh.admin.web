@@ -24,12 +24,12 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-	const userStorage: IUser = JSON.parse(localStorage.getItem('USER_INFO') || "");
+	const userStorage: IUser = JSON.parse(localStorage.getItem('USER_INFO') || "{}");
 	return {
 		avatarProps: { 
-			src: userStorage.avatarUrl || 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+			src: userStorage?.avatarUrl || 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
 			size: 'small',
-			title: userStorage.nickname || '',
+			title: userStorage?.nickname || '',
 			render: (props, dom) => { 
 				return (
 					<Dropdown
