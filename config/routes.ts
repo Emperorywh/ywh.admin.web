@@ -42,6 +42,11 @@ export default [
 				name: '标签管理',
 				path: 'label',
 				component: './blog/label'
+			},
+			{
+				name: '友链管理',
+				path: 'friendlyLink',
+				component: './blog/friendlyLink'
 			}
 		]
 	},

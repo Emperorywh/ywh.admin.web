@@ -1,0 +1,57 @@
+.friendlyLink_container {
+    position: relative;
+    background-color: #fff;
+    padding-bottom: 50px;
+
+    .friendlyLink_header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .friendlyLink_header_input {
+            height: 40px;
+        }
+    }
+
+    .friendlyLink_add_btn {
+        position: absolute;
+        right: 50px;
+    }
+}
+
+.friendly_list_card {
+    min-height: 520px;
+    margin: 30px;
+
+    .friendly_list_item {
+        &:hover {
+            h2 {
+                color: #1890ff;
+                transition: all 0.5s;
+            }
+        }
+    }
+
+    .friendly_link {
+        display: flex;
+        justify-content: flex-start;
+        color: #1890ff;
+        margin-top: 5px;
+        &:hover {
+            color: #F84352;
+        }
+    }
+
+    .friendly_desc {
+        height: 50px;
+        line-height: 25px;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+}
+
+.blog_pagenation {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}

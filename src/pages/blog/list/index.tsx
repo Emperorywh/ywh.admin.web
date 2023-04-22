@@ -71,7 +71,7 @@ const PageComponent: React.FC = () => {
             response.data.items.forEach((item: IBlogLabelCheckBox) => {
                 item.label = item.name;
                 item.value = item._id as string;
-            })
+            });
             setLabelList(response.data.items);
         } else {
             messageApi.error(response.message || '获取博客标签失败');
@@ -209,6 +209,14 @@ const PageComponent: React.FC = () => {
                                         }
 
                                         <Tag className={styles.blog_cover_classify} color="cyan">{(typeof item.classification !== 'string') && item.classification.name}</Tag>
+                                        <div className={styles.blog_cover_labels}>
+                                            {
+                                                item.label.map((labelItem, labelIndex) => {
+                                                    const color = ["magenta", "#f50", "#2db7f5", "#87d068", "#108ee9"];
+                                                    return <Tag color={color[labelIndex % 5]}>{(typeof labelItem !== 'string') && labelItem.name}</Tag>
+                                                })
+                                            }
+                                        </div>
                                     </div>}
                                     actions={[
                                         <EditOutlined key="edit" onClick={() => onEditBlog(item)} />,
