@@ -58,7 +58,7 @@ export function BlogPageQuery(data: IBlogPage) {
  * @returns 
  */
 export function BlogFindById(blogId: string) {
-    return request(`/apis/blog/${blogId}`, {
+    return request(`/apis/blog/detail/${blogId}`, {
         method: 'GET',
     });
 }
