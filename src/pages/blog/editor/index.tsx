@@ -1,8 +1,7 @@
 import { Button, Form, Input, Radio, Select, Spin, Upload, message } from "antd";
 import styles from "./index.less";
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
+import Vditor from 'vditor'
+import "vditor/dist/index.css";
 import { useEffect, useState } from "react";
 import { BlogClassifyPageQuery, IBlogClassify } from "@/api/BlogClassify";
 import { BlogLabelPageQuery, IBlogLabel } from "@/api/BlogLabel";
@@ -32,30 +31,9 @@ const EditorComp: React.FC = () => {
     //博客form实例
     const [blogForm] = Form.useForm();
     // editor 实例
-    const [editor, setEditor] = useState<IDomEditor | null>(null);
-    // 编辑器内容
-    const [content, setContent] = useState('');
-    // 工具栏配置
-    const toolbarConfig: Partial<IToolbarConfig> = {};
-    // 编辑器配置
-    const editorConfig: Partial<IEditorConfig> = {
-        placeholder: '请输入正文...',
-        MENU_CONF: {
-            uploadImage: {
-                fieldName: "file",
-                server: '/apis/user/uploadBlogImage',
-                headers: {
-                    Authorization: token
-                },
-                onSuccess:(file: File, res: any) => {
-
-                }
-            }
-        }
-    }
+    const [vd, setVd] = useState<Vditor>();
     //消息实例
     const [messageApi, contextHolder] = message.useMessage();
-
     //博客分类列表
     const [classifyList, setClassifyList] = useState<IBlogClassify[]>([]);
     //博客标签列表
@@ -153,12 +131,17 @@ const EditorComp: React.FC = () => {
      * 发布博客
      */
     const handleSendBlog = async () => {
+        const content = vd?.getValue();
+        if (!content) {
+            messageApi.error("正文内容不能为空");
+            return;
+        }
         const formData: IBlog = await blogForm.validateFields();
         const jsonData: IBlog = {
             _id: formData._id,
             title: formData.title,
             abstract: formData.abstract,
-            content: content,
+            content,
             classification: formData.classification,
             label: formData.label,
             cover: formData.cover,
@@ -206,8 +189,10 @@ const EditorComp: React.FC = () => {
                     label,
                     author: response.data.author._id
                 });
-                setImageUrl(response.data.cover)
-                setContent(response.data.content);
+                setImageUrl(response.data.cover);
+                if (vd) {
+                    vd?.setValue(response.data.content);
+                }
             } else {
                 messageApi.error(response.message || "查询博客信息失败");
             }
@@ -219,20 +204,40 @@ const EditorComp: React.FC = () => {
         }
     }
 
-    // 及时销毁 editor ，重要！
-    useEffect(() => {
-        return () => {
-            if (editor == null) return
-            editor.destroy()
-            setEditor(null)
-        }
-    }, [editor]);
+    /**
+     * 初始化富文本编辑器
+     */
+    const oninitVditior = async () => {
+        const vditor = new Vditor("vditor", {
+            placeholder: "请输入正文内容！",
+            cache: {
+                enable: false
+            },
+            after: () => {
+                setVd(vditor);
+            },
+            upload: {
+                url: "/apis/user/uploadBlogImage",
+                headers: {
+                    Authorization: token || ''
+                },
+                multiple: false,
+                fieldName: 'file'
+            }
+        });
+    }
 
     useEffect(() => {
-        onFetchBlogClassify();
-        onFetchBlogLabel();
-        onFetchBlogInfo();
+        oninitVditior();
     }, []);
+
+    useEffect(() => {
+        if (vd) {
+            onFetchBlogClassify();
+            onFetchBlogLabel();
+            onFetchBlogInfo();
+        }
+    }, [vd]);
 
     return <div className={styles.editor_container}>
         {contextHolder}
@@ -329,20 +334,7 @@ const EditorComp: React.FC = () => {
                     </Form.Item>
                 </Form>
                 <div className={styles.editor_content}>
-                    <Toolbar
-                        editor={editor}
-                        defaultConfig={toolbarConfig}
-                        mode="default"
-                        style={{ borderBottom: '1px solid #F7F7F7' }}
-                    />
-                    <Editor
-                        defaultConfig={editorConfig}
-                        value={content}
-                        onCreated={setEditor}
-                        onChange={editor => setContent(editor.getHtml())}
-                        mode="default"
-                        style={{ height: '500px', overflowY: 'hidden' }}
-                    />
+                    <div id="vditor" className="vditor" />
                 </div>
 
             </div>
