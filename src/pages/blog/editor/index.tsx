@@ -177,21 +177,22 @@ const EditorComp: React.FC = () => {
         const blogId = searchParams.get('blogId');
         if (blogId) {
             const response = await BlogFindById(blogId);
+            const { blog } = response.data;
             if (response.code === 200) {
-                const classification = response.data.classification._id;
+                const classification = blog.classification._id;
                 const label: string[] = [];
-                response.data.label.forEach((item: IBlogLabel) => {
+                blog.label.forEach((item: IBlogLabel) => {
                     label.push(item._id as string);
                 });
                 blogForm.setFieldsValue({
-                    ...response.data,
+                    ...blog,
                     classification,
                     label,
-                    author: response.data.author._id
+                    author: blog.author._id
                 });
-                setImageUrl(response.data.cover);
+                setImageUrl(blog.cover);
                 if (vd) {
-                    vd?.setValue(response.data.content);
+                    vd?.setValue(blog.content);
                 }
             } else {
                 messageApi.error(response.message || "查询博客信息失败");

@@ -52,7 +52,7 @@ export function FriendlyLinkPageQuery(data: IFriendlyLinkPage) {
  * 友情链接
  */
 export interface IFriendlyLink {
-    _id: string,
+    _id?: string,
     name: string,
     url: string,
     cover: string,
