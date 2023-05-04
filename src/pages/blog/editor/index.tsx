@@ -1,6 +1,6 @@
 import { Button, Form, Input, Radio, Select, Spin, Upload, message } from "antd";
 import styles from "./index.less";
-import Vditor from 'vditor'
+import Vditor from 'vditor';
 import "vditor/dist/index.css";
 import { useEffect, useState } from "react";
 import { BlogClassifyPageQuery, IBlogClassify } from "@/api/BlogClassify";

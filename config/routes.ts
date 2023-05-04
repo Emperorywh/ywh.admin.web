@@ -47,7 +47,12 @@ export default [
 				name: '友链管理',
 				path: 'friendlyLink',
 				component: './blog/friendlyLink'
-			}
+			},
+			{
+				name: '关于我',
+				path: 'about',
+				component: './blog/about'
+			},
 		]
 	},
 	{
