@@ -56,6 +56,18 @@ export default [
 		]
 	},
 	{
+		name: '日志管理',
+		icon: 'smile',
+		path: '/logs',
+		routes: [
+			{
+				name: '请求日志',
+				path: 'requestLog',
+				component: './logs/requestLog'
+			}
+		],
+	},
+	{
 		name: '创作者中心',
 		path: '/blog/editor',
 		layout: false,
