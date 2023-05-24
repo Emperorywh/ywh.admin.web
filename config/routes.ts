@@ -49,6 +49,11 @@ export default [
 				component: './blog/friendlyLink'
 			},
 			{
+				name: '个性签名',
+				path: 'persionSingn',
+				component: './blog/persionSingn'
+			},
+			{
 				name: '关于我',
 				path: 'about',
 				component: './blog/about'
